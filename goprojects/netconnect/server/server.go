@@ -32,38 +32,77 @@ func outChanFactory() (chan value, os.Error){
 	//Make the communication channel for this program
 	ch := make(chan value)
 	//Link the ch channel to the export channel
-	err = exp.Export("exportChannel",ch,netchan.Send,new(value))
+	err = exp.Export("exportChannelSend",ch,netchan.Send,new(value))
 	if err != nil {
 		return nil, err
 	}
 	return ch, err
 }
 
+func inChanFactory() (chan value, os.Error){
+	//Create and initialize the import channel
+	exp, err := netchan.NewExporter("tcp",":2346")
+	lt();fmt.Println("exp.Addr().String(): ", exp.Addr().String())
+	if err != nil {
+		return nil, err
+	}
+	lt();fmt.Println("exportFactory Channel Made")
+	//Make the communication channel for this program
+	ch := make(chan value)
+	//Link the ch channel to the export channel
+	err = exp.Export("exportChannelRecv",ch,netchan.Recv,new(value))
+	if err != nil {
+		return nil, err
+	}
+	return ch, err
+}
+func printIncoming(inChan chan value, quit chan bool) {
+	inval := value{0,"",false}
+	for ; !inval.close && !closed(inChan) ; {
+		inval = <- inChan
+		lt();fmt.Println("Data recieved from server: ",inval)
+	}
+	quit <- true
+}
+
+func acceptOutgoing(outChan chan value, quit chan bool) {
+	input := bufio.NewReader(os.Stdin)
+	outval := value{0,"",false}
+	for i:= 0 ; !outval.close && !closed(outChan); i ++ {
+		result, _ := input.ReadString('\n')
+		text := strings.TrimSpace(result)  
+		outval = value{i,text,(text == "quit")}
+		lt();fmt.Println("Sending data to outChan: ",outval)
+		outChan <- outval
+		lt();fmt.Println("Data sent")
+	}
+	quit <- true
+}
 func main() {
 	//initialize program time
 	begin = time.Nanoseconds() / 1e6
 	//Create a new [value] variable
-	testval := value{}
-	input := bufio.NewReader(os.Stdin)
 	//Use the factory to create a new network communication channel
-	outChan, err := outChanFactory()
-	if err != nil {
-		lt();fmt.Println("outChanFactory error: ",err)
+	outChan, outerr := outChanFactory()
+	if outerr != nil {
+		lt();fmt.Println("outChanFactory error: ",outerr)
 	}
 	lt();fmt.Println("Returned to main after outChan made")
-	//Write all data recieved from stardard input to the network channel
-	for i:= 0 ; !testval.close && !closed(outChan); i ++ {
-		result, _ := input.ReadString('\n')
-		text := strings.TrimSpace(result)  
-		testval = value{i,text,(text == "quit")}
-		lt();fmt.Println("Sending data to outChan: ",testval)
-		outChan <- testval
-		lt();fmt.Println("Data sent")
+	inChan, inerr := inChanFactory()
+	lt();fmt.Println("inchan init")
+	if inerr != nil {
+		lt();fmt.Println("inChanFactory error: ",inerr)
 	}
-	lt();fmt.Println("Sending 2 Terminate signals to client")
-	testval = value{0,"Goodbye!",true}
-	outChan <- testval
-	outChan <- testval
-	lt();fmt.Println("Terminate signals sent - Exiting")
+	lt();fmt.Println("Returned to main after inChan made")
+	
+	//Write all data recieved from stardard input to the network channel
+	inQuit := make(chan bool)
+	outQuit := make(chan bool)
+	go printIncoming(inChan,inQuit)
+	go acceptOutgoing(outChan, outQuit)
+	switch {
+		case <- inQuit:
+		case <- outQuit:
+	}
 	
 }
