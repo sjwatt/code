@@ -1,0 +1,13 @@
+#!/bin/bash
+REMOTE_FOLDER="/root/goprojects/"
+LOCAL_FOLDER="$HOME/goprojects/*"
+SSH_USER="root"
+SSH_HOST="home.sjwatt.com"
+ 
+DRY="--dry-run"
+if [ "$1" == 'write' ]; then
+  DRY=" " 
+fi
+echo $DRY
+ 
+rsync $DRY -avru -e 'ssh -p 12345' $LOCAL_FOLDER $SSH_USER@$SSH_HOST:$REMOTE_FOLDER

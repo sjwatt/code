@@ -1,0 +1,20 @@
+#!/bin/bash
+echo "Root project folder:"
+ROOTFOLDER="$HOME/goprojects/$1"
+echo $ROOTFOLDER
+sleep 1
+echo "opening Nautilus..."
+nautilus $ROOTFOLDER
+sleep 1
+echo "Project Sub-Folders:"
+for folders in `ls $ROOTFOLDER`; do
+	
+	CURRENT=$ROOTFOLDER/$folders
+	echo "Opening Gedit for .go files in: $CURRENT"
+	cd $CURRENT
+	gedit *.go &
+	sleep 1
+	echo "Opening terminal for Sub-folder: $CURRENT"
+	gnome-terminal &
+	sleep 1
+done
