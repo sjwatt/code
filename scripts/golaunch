@@ -1,6 +1,6 @@
 #!/bin/bash
 echo "Root project folder:"
-ROOTFOLDER="$HOME/goprojects/$1"
+ROOTFOLDER="$HOME/code/goprojects/$1"
 echo $ROOTFOLDER
 sleep 1
 echo "opening Nautilus..."
