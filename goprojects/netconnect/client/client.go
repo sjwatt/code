@@ -99,18 +99,18 @@ func comRoutine() {
 	go printIncoming(inChan,inQuit)
 	go acceptOutgoing(outChan, outQuit)
 	switch {
-		case <- inQuit:
-		case <- outQuit:
+		case <- inQuit:lt();fmt.Println("Incoming Channel quit")
+		case <- outQuit:lt();fmt.Println("Outgoing Channel quit")
 	}
 	
 }
 func main() {
 	//initialize program time
 	begin = time.Nanoseconds() / 1e6
-	for {
+	//for {
 		// Attempt to form a com channel, and run if siccessful
 		comRoutine()
 		// If com channel quits/fails then wait 1 second and run again, forever.
 		time.Sleep(1e9)
-	}
+	//}
 }
