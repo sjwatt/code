@@ -13,7 +13,6 @@ import (
 type value struct {
 	i int
 	s string
-	close bool
 }
 
 var begin int64
@@ -57,9 +56,8 @@ func inChanFactory() (chan value, os.Error){
 	return ch, err
 }
 func printIncoming(inChan chan value, quit chan bool) {
-	inval := value{0,"",false}
-	for ; !inval.close && !closed(inChan) ; {
-		inval = <- inChan
+	for ;  !closed(inChan) ; {
+		inval := <- inChan
 		lt();fmt.Println("Data recieved from server: ",inval)
 	}
 	quit <- true
@@ -67,12 +65,11 @@ func printIncoming(inChan chan value, quit chan bool) {
 
 func acceptOutgoing(outChan chan value, quit chan bool) {
 	input := bufio.NewReader(os.Stdin)
-	outval := value{0,"",false}
-	for i:= 0 ; !outval.close && !closed(outChan); i ++ {
+	for i:= 0 ; !closed(outChan); i ++ {
 		result, _ := input.ReadString('\n')
 		if closed(outChan) { quit <- true }
 		text := strings.TrimSpace(result)  
-		outval = value{i,text,(text == "quit")}
+		outval := value{i,text}
 		lt();fmt.Println("Sending data to outChan: ",outval)
 		outChan <- outval
 		lt();fmt.Println("Data sent")

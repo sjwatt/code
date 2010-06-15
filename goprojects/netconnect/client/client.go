@@ -13,7 +13,6 @@ import (
 type value struct {
 	i int
 	s string
-	close bool
 }
 
 var begin int64
@@ -55,27 +54,25 @@ func outChanFactory() (chan value, os.Error){
 	}
 	return ch, err	
 }
-func printIncoming(inChan chan value, quit chan bool) {
-	inval := value{0,"",false}
-	for ; !inval.close && !closed(inChan) ; {
-		inval = <- inChan
+func printIncoming(inChan chan value, done chan bool) {
+	for ; !closed(inChan) ; {
+		inval := <- inChan
 		lt();fmt.Println("Data recieved from server: ",inval)
 	}
-	quit <- true
+	done <- true
 }
 
-func acceptOutgoing(outChan chan value, quit chan bool) {
+func acceptOutgoing(outChan chan value, done chan bool) {
 	input := bufio.NewReader(os.Stdin)
-	outval := value{0,"",false}
-	for i:= 0 ; !outval.close && !closed(outChan); i ++ {
+	for i:= 0 ; !closed(outChan); i ++ {
 		result, _ := input.ReadString('\n')
-		text := strings.TrimSpace(result)  
-		outval = value{i,text,(text == "quit")}
+		text := strings.TrimSpace(result)
+		outval := value{i,text}
 		lt();fmt.Println("Sending data to outChan: ",outval)
 		outChan <- outval
 		lt();fmt.Println("Data sent")
 	}
-	quit <- true
+	done <- true
 }
 func comRoutine() {
 	//Use the factory to create a new network communication channel, in and out
@@ -94,23 +91,23 @@ func comRoutine() {
 		lt();fmt.Println("Returned to main after outChan made")
 	}
 	
-	inQuit := make(chan bool)
-	outQuit := make(chan bool)
-	go printIncoming(inChan,inQuit)
-	go acceptOutgoing(outChan, outQuit)
-	switch {
-		case <- inQuit:lt();fmt.Println("Incoming Channel quit")
-		case <- outQuit:lt();fmt.Println("Outgoing Channel quit")
+	inDone := make(chan bool)
+	outDone := make(chan bool)
+	go printIncoming(inChan,inDone)
+	go acceptOutgoing(outChan,outDone)
+	select {
+		case <- inDone:lt();fmt.Println("Incoming Channel quit")
+		case <- outDone:lt();fmt.Println("Outgoing Channel quit")
 	}
-	
+	lt();fmt.Println("Killing other thread")	
 }
 func main() {
 	//initialize program time
 	begin = time.Nanoseconds() / 1e6
-	//for {
+	for {
 		// Attempt to form a com channel, and run if siccessful
 		comRoutine()
 		// If com channel quits/fails then wait 1 second and run again, forever.
 		time.Sleep(1e9)
-	//}
+	}
 }
