@@ -2,9 +2,9 @@
 echo "Root project folder:"
 ROOTFOLDER="$HOME/code/goprojects/$1"
 echo $ROOTFOLDER
-sleep 1
-echo "opening Nautilus..."
-nautilus $ROOTFOLDER
+#sleep 1
+#echo "opening Nautilus..."
+#nautilus $ROOTFOLDER
 sleep 1
 echo "Project Sub-Folders:"
 for folders in `ls $ROOTFOLDER`; do
