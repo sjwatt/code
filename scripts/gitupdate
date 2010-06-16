@@ -1,0 +1,2 @@
+cd $HOME/code
+git pull origin master
