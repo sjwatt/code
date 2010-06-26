@@ -1,1 +1,1 @@
-ssh -X root@home.sjwatt.com -p 12345
+ssh -X -Y root@home.sjwatt.com -p 12345
