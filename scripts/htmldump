@@ -1,0 +1,6 @@
+#!/bin/bash
+ls -1 *.html | while read page
+do
+echo $page
+lynx -dump $page > $page.txt
+done
