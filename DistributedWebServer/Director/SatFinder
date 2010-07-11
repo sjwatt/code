@@ -1,0 +1,42 @@
+#!/bin/bash
+date
+
+SLEEP_TIME="0"
+STATUS_DIRECTORY="Status/"
+
+while true;
+do
+	echo "Sattelite Optimizer Script"
+	echo "-Simon Watt"
+	echo "============================================================================================"
+	echo "This program iterates through all of the Satellite Status Files and determines the best one."
+	echo "It then modifies the .htaccess file to a 302 re-direct to that satellite."
+	echo "============================================================================================"
+	date
+	echo "Scanning Status Directory: \"$STATUS_DIRECTORY\""
+	BEST_SAT_IP=""
+	BEST_SAT_LOAD="9999"
+	for CURRENT_FILE in $STATUS_DIRECTORY*;
+	do
+		echo
+		echo "$CURRENT_FILE ========================="
+		CURRENT_IP=`awk '{print $1}' $CURRENT_FILE`
+		CURRENT_LOAD=`awk '{print $2}' $CURRENT_FILE`
+		echo "IP: $CURRENT_IP LOAD: $CURRENT_LOAD"
+		compare_result=`echo "$CURRENT_LOAD < $BEST_SAT_LOAD" | bc`
+		if [ $compare_result -eq "1" ]
+		then
+			BEST_SAT_IP=$CURRENT_IP
+			BEST_SAT_LOAD=$CURRENT_LOAD
+		fi
+	done
+	echo
+	echo "Best satellite found:"
+	echo "IP: $BEST_SAT_IP LOAD: $BEST_SAT_LOAD"
+	echo "Writing 302 Re-Direct to .htaccess file"
+	#This still needs to be done
+	echo "============================================================================================"
+	echo "Sleeping for $SLEEP_TIME seconds"
+	sleep $SLEEP_TIME
+	clear
+done
