@@ -1,0 +1,12 @@
+#!/bin/bash
+COUNT=1;
+MAX=100
+while ( (($COUNT < $MAX)) ); do
+
+FREQ=`expr $RANDOM % 9000`
+LEN=`expr 50`
+#echo $COUNT,$FREQ,$LEN
+beep -f $FREQ -l $LEN
+COUNT=$[$COUNT + 1]
+done
+

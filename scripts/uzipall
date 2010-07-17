@@ -1,0 +1,9 @@
+#!/bin/bash
+for f in *.zip;
+do
+	
+	pathname=`echo $f | sed 's/.\{4\}$//'`
+	mkdir $pathname
+	unzip -o "$f" -d "$pathname" 
+	
+done

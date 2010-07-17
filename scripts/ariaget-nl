@@ -1,0 +1,1 @@
+aria2c -i $1 -j $2 --http-user=446670 --http-passwd=acklmH

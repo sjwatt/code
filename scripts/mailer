@@ -1,0 +1,5 @@
+#!/bin/bash
+MYIP=`curl -s whatismyip.org`
+SYSTAT=`mpstat`
+PROCS=`ps -eo pcpu,pid,user,args | sort -k 1 -r | head -10`
+sendEmail -f sjwatt@shaw.ca -t sjwatt@gmail.com -m "$MYIP\n$SYSTAT\n$PROCS" -u "AUTOMAIL" -s shawmail.vc.shawcable.net
