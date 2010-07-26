@@ -3,7 +3,7 @@
 import time
 
 TIMEFORMAT = "%m/%d/%y %H:%M:%S"
-INTERVAL = 1
+INTERVAL = 5
 
 def getTimeList():
 	statFile = file("/proc/stat", "r")
