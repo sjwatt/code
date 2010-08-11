@@ -1,0 +1,5 @@
+#!/bin/bash
+
+for data in `netcat -u -p 12345 192.168.1.147 42000`
+do
+	echo 

@@ -1,0 +1,19 @@
+#!/bin/bash
+while true; do
+#Site "pusher" script
+STATUS_DIRECTORY="Status/"
+#Get list of satellite machines from director
+rm -r Status
+rsync -r simon@192.168.1.1:/home/simon/code/Status .
+
+#Iterate through the files and
+#rsync push a copy of the website to every satellite machine
+for CURRENT_FILE in $STATUS_DIRECTORY*;
+do
+	echo
+	echo "$CURRENT_FILE ================="
+	CURRENT_IP=`awk '{print $1}' $CURRENT_FILE`
+	rsync -r www root@$CURRENT_IP:/var/
+done
+sleep 5
+done

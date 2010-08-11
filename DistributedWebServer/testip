@@ -1,0 +1,12 @@
+#!/bin/bash
+while true; do
+ip=`ifconfig | grep 'inet addr:'| grep -v '127.0.0.1' | cut -d: -f2 | awk '{ print $1}'`
+load=`./cpupct.py`
+
+echo "$ip $load"
+filename=`echo $ip | md5sum | awk '{print $1}'`
+echo "filename = $filename"
+
+
+echo "$ip $load" | ssh simon@192.168.1.1 "cat > code/Status/$filename"
+done

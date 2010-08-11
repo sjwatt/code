@@ -1,0 +1,10 @@
+#!/bin/bash
+
+exec 104<> /dev/udp/192.168.1.143/$1
+
+while [ 1 -ge 0 ] ; do
+	sleep 3
+	echo "testing connection" >&104
+
+done
+exit 0
