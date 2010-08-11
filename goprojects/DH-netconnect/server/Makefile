@@ -5,7 +5,7 @@ include $(GOROOT)/src/Make.$(GOARCH)
 .go.$O:
 	$(GC) -o $@ $<
 
-TARG = server
+TARG = DHServer
 
 OBJS = $(TARG).$O 
 

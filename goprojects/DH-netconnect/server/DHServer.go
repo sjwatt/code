@@ -229,7 +229,7 @@ func comRoutine() {
 		lt()
 		fmt.Println("Returned to main after outChan made")
 	}
-
+	
 	if keyExchangeServer(outChan, inChan) {
 		lt()
 		fmt.Println("Keyexchange Success")
@@ -250,8 +250,7 @@ func comRoutine() {
 	} else {
 		lt()
 		fmt.Println("Key Exchange Failed")
-		close(outChan)
-		close(inChan)
+		
 	}
 }
 

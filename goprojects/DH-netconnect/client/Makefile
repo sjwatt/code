@@ -5,7 +5,7 @@ include $(GOROOT)/src/Make.$(GOARCH)
 .go.$O:
 	$(GC) -o $@ $<
 
-TARG = client
+TARG = DHClient
 
 OBJS = $(TARG).$O 
 
