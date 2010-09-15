@@ -1,0 +1,26 @@
+#!/bin/bash
+
+while true; do
+num1=$RANDOM
+let "num1 %= 255"
+num2=$RANDOM
+let "num2 %= 255"
+num3=$RANDOM
+let "num3 %= 255"
+num4=$RANDOM
+let "num4 %= 255"
+IPADDR="$num1.$num2.$num3.$num4"
+
+LOAD_DATA=$RANDOM
+let "LOAD_DATA %= 100"
+
+FILENAME=`echo $IPADDR | md5sum | awk '{print $1}'`
+
+echo $FILENAME
+echo $IPADDR
+echo $LOAD_DATA
+
+echo "$IPADDR $LOAD_DATA" > "Status/$FILENAME"
+sleep .3
+
+done
