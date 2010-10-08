@@ -8,7 +8,7 @@ do
 	subfile=`echo $file | sed 's ..$  '`
 	zipfile=`echo $subfile | sed 's ..$  '`
 	echo $zipfile
-	cat $subfile* >> $zipfile
+	cat $subfile* | pv | cat >> $zipfile
 done
 for file in *.zip
 do
