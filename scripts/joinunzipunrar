@@ -1,0 +1,24 @@
+#!/bin/bash
+rm *.zip
+rm *.r*
+rm *.url
+rm *.avi
+for file in *.zip.001
+do
+	subfile=`echo $file | sed 's ..$  '`
+	zipfile=`echo $subfile | sed 's ..$  '`
+	echo $zipfile
+	cat $subfile* >> $zipfile
+done
+for file in *.zip
+do
+	echo $file
+	unzip -o $file
+done
+for file in *.rar
+do
+	unrar e -o+ $file
+done
+rm *.zip
+rm *.r*
+rm *.url
