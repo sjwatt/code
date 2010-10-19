@@ -1,0 +1,7 @@
+#!/bin/bash
+
+echo Your external IP Address is:
+wget www.whatismyip.com/automation/n09230945.asp -O - -o /dev/null
+echo 
+
+exit 0
