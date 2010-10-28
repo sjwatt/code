@@ -1,0 +1,5 @@
+rm *html*
+aria2c -i filelist -j 2 --http-user=siguy --http-passwd=jonestown
+rm filelist2
+cat *.html | grep "/get/" | awk '{print $2}' | sed 's/^......//' | sed 's/.$//' > filelist2
+aria2c -i filelist2 -j 2 --http-user=siguy --http-passwd=jonestown
