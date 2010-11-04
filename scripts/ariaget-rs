@@ -1,1 +1,1 @@
-aria2c -i $1 -j $2 --http-user=siguy --http-passwd=jonestown
+aria2c -i $1 --http-user=siguy --http-passwd=jonestown
