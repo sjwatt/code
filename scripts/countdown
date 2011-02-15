@@ -1,0 +1,5 @@
+for var in `seq $1 -1 0`
+do
+echo $var
+sleep 1
+done
