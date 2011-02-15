@@ -1,0 +1,30 @@
+#!/bin/bash
+QUALITY=0.67
+OUTPUT=/mnt/FILES/SHARED/Movies/ipad
+HANDBRAKE_SETTINGS="-4 -T -2 -e x264 --loose-anamorphic -4 -x ref=2:bframes=2:subq=6:mixed-refs=0:weightb=0:8x8dct=0:trellis=0 -X 1280"
+
+if [ $# -gt 0 ]
+then
+ OUTPUT_FILE=`echo $1.mp4`
+ echo calc $OUTPUT_FILE
+ TARGET=$OUTPUT/`echo $OUTPUT_FILE`
+ echo $TARGET
+
+ if [ -f "$TARGET" ]
+ then
+   exit 0
+ fi
+
+ AUDIO_TRACKS=`HandBrakeCLI -t 0 -i "$1" 2>&1|grep "scan: audio"|wc -l`
+ AUDIO="-a 1"
+
+ if [ "$AUDIO_TRACKS" -eq "2" ]
+ then
+   AUDIO="-a 1,2"
+ fi
+
+ HandBrakeCLI $HANDBRAKE_SETTINGS $AUDIO -q $QUALITY -i "$1" -o "$TARGET"
+else
+ echo "usage: dream2mp4 INPUT"
+fi
+

@@ -1,4 +1,4 @@
 for file in *.part1.rar
 do
-	unrar e $file
+	unrar e -o- $file
 done
