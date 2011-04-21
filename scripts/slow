@@ -1,0 +1,2 @@
+#!/bin/bash
+cvlc --rate 0.96 --fullscreen $1
