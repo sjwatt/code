@@ -1,0 +1,1 @@
+aria2c -i filelist --http-user=siguy --http-passwd=jonestown --check-certificate=false -x 10 -j 1
